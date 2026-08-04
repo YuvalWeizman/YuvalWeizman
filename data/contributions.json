@@ -63,7 +63,7 @@
     },
     {
       "date": "2025-08-13",
-      "level": 4,
+      "level": 2,
       "week": 1,
       "weekday": 3
     },
@@ -2196,8 +2196,14 @@
       "level": 0,
       "week": 52,
       "weekday": 1
+    },
+    {
+      "date": "2026-08-04",
+      "level": 4,
+      "week": 52,
+      "weekday": 2
     }
   ],
   "username": "YuvalWeizman",
-  "generated_at": "2026-08-03T22:22:38.616845Z"
+  "generated_at": "2026-08-04T04:42:28.230346Z"
 }
