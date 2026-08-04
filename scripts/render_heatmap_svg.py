@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Render the scraped contribution grid into a self-contained animated SVG.
+"""Render the scraped contribution grid into a self-contained SVG.
 
-Animation is done with native SMIL <animate> tags (no <script>, no external
-CSS) since that's what GitHub actually allows to render/play inside a
-markdown-embedded SVG.
+Note: GitHub's markdown renderer inserts README images as <img> tags, and
+neither SMIL nor CSS animation plays for SVGs loaded that way (confirmed by
+hand against the live profile). So this renders a static card rather than
+pretending to animate.
 """
 import json
 import os
@@ -25,9 +26,6 @@ TEXT_COLOR = "#8b949e"
 TITLE_COLOR = "#c9d1d9"
 
 MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-STAGGER = 0.018  # seconds between diagonally-adjacent cells
-DURATION = 0.5
 
 
 def month_labels(cells):
@@ -77,16 +75,7 @@ def build_svg(grid: dict) -> str:
         x = MARGIN_LEFT + c["week"] * (CELL + GAP)
         y = MARGIN_TOP + c["weekday"] * (CELL + GAP)
         color = LEVEL_COLORS[min(c["level"], 4)]
-        delay = (c["week"] + c["weekday"]) * STAGGER
-        parts.append(
-            f'<rect x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2" fill="{color}" '
-            f'opacity="0">'
-            f'<animate attributeName="opacity" from="0" to="1" begin="{delay:.3f}s" '
-            f'dur="{DURATION}s" fill="freeze" calcMode="spline" keySplines="0.2 0 0.2 1"/>'
-            f'<animate attributeName="y" from="{y + 4}" to="{y}" begin="{delay:.3f}s" '
-            f'dur="{DURATION}s" fill="freeze" calcMode="spline" keySplines="0.2 0 0.2 1"/>'
-            f'</rect>'
-        )
+        parts.append(f'<rect x="{x}" y="{y}" width="{CELL}" height="{CELL}" rx="2" fill="{color}"/>')
 
     parts.append("</svg>")
     return "".join(parts)
